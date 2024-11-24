@@ -9,12 +9,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const usuario_module_1 = require("./usuario/usuario.module");
+const produto_module_1 = require("./produto/produto.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [usuario_module_1.UsuarioModule],
+        imports: [usuario_module_1.UsuarioModule, produto_module_1.ProdutoModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
