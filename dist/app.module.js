@@ -10,12 +10,25 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const usuario_module_1 = require("./usuario/usuario.module");
 const produto_module_1 = require("./produto/produto.module");
+const typeorm_1 = require("@nestjs/typeorm");
+const postgres_config_service_1 = require("./config/postgres.config.service");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [usuario_module_1.UsuarioModule, produto_module_1.ProdutoModule],
+        imports: [
+            usuario_module_1.UsuarioModule,
+            produto_module_1.ProdutoModule,
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
+            typeorm_1.TypeOrmModule.forRootAsync({
+                useClass: postgres_config_service_1.PostegresConfigService,
+                inject: [postgres_config_service_1.PostegresConfigService],
+            }),
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
