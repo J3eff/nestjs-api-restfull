@@ -30,7 +30,7 @@ export class UsuarioController {
     user.nome = dadosDoUsuario.nome;
     user.id = uuid();
 
-    this.usuarioRepository.salvar(user);
+    this.usuarioService.criaUsuario(user);
 
     return {
       usuario: new ListaUsuarioDTO(user.id, user.nome),
@@ -48,7 +48,7 @@ export class UsuarioController {
     @Param('id') id: string,
     @Body() novosDados: AtualizaUsuarioDTO,
   ) {
-    const usuarioAtualizado = await this.usuarioRepository.atualiza(
+    const usuarioAtualizado = await this.usuarioService.atualizaUsuario(
       id,
       novosDados,
     );
@@ -61,7 +61,7 @@ export class UsuarioController {
 
   @Delete('/:id')
   async removeUsuario(@Param('id') id: string) {
-    const usuarioRemovido = await this.usuarioRepository.remove(id);
+    const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
 
     return {
       usuario: usuarioRemovido,
