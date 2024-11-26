@@ -10,7 +10,6 @@ import { PedidoModule } from './pedido/pedido.module';
   imports: [
     UsuarioModule,
     ProdutoModule,
-    PedidoModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -18,6 +17,7 @@ import { PedidoModule } from './pedido/pedido.module';
       useClass: PostegresConfigService,
       inject: [PostegresConfigService],
     }),
+    PedidoModule,
   ],
 })
 export class AppModule {}

@@ -27,7 +27,7 @@ export class PedidoEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: string;
 
-  @DeleteDateColumn({ name: 'delete_at' })
+  @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
 
   @ManyToOne(() => UsuarioEntity, (usuario) => usuario.pedidos)
