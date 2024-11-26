@@ -24,4 +24,15 @@ export class PedidoService {
 
     return await this.pedidoRepository.save(pedido);
   }
+
+  async obtemPedidosDeUsuario(usuarioId: string) {
+    return await this.pedidoRepository.find({
+      where: {
+        usuario: { id: usuarioId },
+      },
+      relations: {
+        usuario: true,
+      },
+    });
+  }
 }

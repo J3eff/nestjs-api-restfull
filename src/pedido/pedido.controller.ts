@@ -1,4 +1,4 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 
 @Controller('pedidos')
@@ -8,5 +8,10 @@ export class PedidoController {
   @Post()
   async create(@Query('usuarioId') usuarioId: string) {
     return await this.pedidoService.cadastraPedido(usuarioId);
+  }
+
+  @Get()
+  async obtemPedidosDeUsuario(@Query('usuarioId') usuarioId: string) {
+    return await this.pedidoService.obtemPedidosDeUsuario(usuarioId);
   }
 }
