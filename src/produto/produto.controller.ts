@@ -22,8 +22,9 @@ export class ProdutoController {
 
   @Post()
   async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
-    const produtoCadastrado =
-      await this.produtoService.criaProduto(dadosProduto);
+    const produtoCadastrado = await this.produtoService.criaProduto(
+      dadosProduto,
+    );
 
     return {
       mensagem: 'Produto criado com sucesso.',
