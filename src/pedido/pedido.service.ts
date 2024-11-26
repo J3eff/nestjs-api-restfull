@@ -1,26 +1,27 @@
+import { UsuarioEntity } from '../usuario/usuario.entity';
+import { PedidoEntity } from './pedido.entity';
 import { Injectable } from '@nestjs/common';
-import { CreatePedidoDto } from './dto/create-pedido.dto';
-import { UpdatePedidoDto } from './dto/update-pedido.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { StatusPedido } from './enum/statuspedido.enum';
 
 @Injectable()
 export class PedidoService {
-  create(createPedidoDto: CreatePedidoDto) {
-    return 'This action adds a new pedido';
-  }
+  constructor(
+    @InjectRepository(PedidoEntity)
+    private readonly pedidoRepository: Repository<PedidoEntity>,
+    @InjectRepository(UsuarioEntity)
+    private readonly usuarioRepository: Repository<UsuarioEntity>,
+  ) {}
 
-  findAll() {
-    return `This action returns all pedido`;
-  }
+  async cadastraPedido(usuarioId: string) {
+    const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
+    const pedido = new PedidoEntity();
 
-  findOne(id: number) {
-    return `This action returns a #${id} pedido`;
-  }
+    pedido.valorTotal = 0;
+    pedido.status = StatusPedido.EM_PROCESSAMENTO;
+    pedido.usuario = usuario;
 
-  update(id: number, updatePedidoDto: UpdatePedidoDto) {
-    return `This action updates a #${id} pedido`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} pedido`;
+    return await this.pedidoRepository.save(pedido);
   }
 }
