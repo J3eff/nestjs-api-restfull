@@ -50,7 +50,7 @@ export class ProdutoController {
     @Param('id') id: string,
     @Body() dadosProduto: AtualizaProdutoDTO,
   ) {
-    const produtoAlterado = await this.produtoRepository.atualiza(
+    const produtoAlterado = await this.produtoService.atualizaProduto(
       id,
       dadosProduto,
     );
@@ -63,7 +63,7 @@ export class ProdutoController {
 
   @Delete('/:id')
   async remove(@Param('id') id: string) {
-    const produtoRemovido = await this.produtoRepository.remove(id);
+    const produtoRemovido = await this.produtoService.deletaProduto(id);
 
     return {
       mensagem: 'produto removido com sucesso',
