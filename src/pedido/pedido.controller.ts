@@ -6,12 +6,15 @@ export class PedidoController {
   constructor(private readonly pedidoService: PedidoService) {}
 
   @Post()
-  async create(@Query('usuarioId') usuarioId: string) {
-    return await this.pedidoService.cadastraPedido(usuarioId);
+  async criaPedido(@Query('usuarioId') usuarioId: string) {
+    const pedidoCriado = await this.pedidoService.cadastraPedido(usuarioId);
+    return pedidoCriado;
   }
 
   @Get()
   async obtemPedidosDeUsuario(@Query('usuarioId') usuarioId: string) {
-    return await this.pedidoService.obtemPedidosDeUsuario(usuarioId);
+    const pedidos = await this.pedidoService.obtemPedidosDeUsuario(usuarioId);
+
+    return pedidos;
   }
 }

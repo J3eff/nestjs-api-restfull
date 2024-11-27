@@ -15,7 +15,6 @@ async function bootstrap() {
 
   //Resolve as injeção de dependencia do class-validator
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

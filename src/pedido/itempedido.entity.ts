@@ -1,6 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
+import { StatusPedido } from './enum/statuspedido.enum';
+import { UsuarioEntity } from '../usuario/usuario.entity';
 import { PedidoEntity } from './pedido.entity';
-
 @Entity({ name: 'itens_pedidos' })
 export class ItemPedidoEntity {
   @PrimaryGeneratedColumn('uuid')
