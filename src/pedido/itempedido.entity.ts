@@ -10,6 +10,7 @@ import {
 import { StatusPedido } from './enum/statuspedido.enum';
 import { UsuarioEntity } from '../usuario/usuario.entity';
 import { PedidoEntity } from './pedido.entity';
+
 @Entity({ name: 'itens_pedidos' })
 export class ItemPedidoEntity {
   @PrimaryGeneratedColumn('uuid')
