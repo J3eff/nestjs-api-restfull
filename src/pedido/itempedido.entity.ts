@@ -10,6 +10,7 @@ import {
 import { StatusPedido } from './enum/statuspedido.enum';
 import { UsuarioEntity } from '../usuario/usuario.entity';
 import { PedidoEntity } from './pedido.entity';
+import { ProdutoEntity } from '../produto/produto.entity';
 
 @Entity({ name: 'itens_pedidos' })
 export class ItemPedidoEntity {
@@ -27,4 +28,9 @@ export class ItemPedidoEntity {
     onUpdate: 'CASCADE',
   })
   pedido: PedidoEntity;
+
+  @ManyToOne(() => ProdutoEntity, (product) => product.itensPedido, {
+    cascade: ['update'],
+  })
+  produto: ProdutoEntity;
 }
