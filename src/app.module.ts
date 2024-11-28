@@ -7,7 +7,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { PostgresConfigService } from './config/postgres.config.service';
 import { PedidoModule } from './pedido/pedido.module';
 import { APP_FILTER } from '@nestjs/core';
-import { FiltroDeExecaoHttp } from './filtros/filtro-de-execao-http';
+import { FiltroDeExecaoGlobal } from './filtros/filtro-de-execao-global';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { FiltroDeExecaoHttp } from './filtros/filtro-de-execao-http';
   providers: [
     {
       provide: APP_FILTER,
-      useClass: FiltroDeExecaoHttp,
+      useClass: FiltroDeExecaoGlobal,
     },
   ],
 })
