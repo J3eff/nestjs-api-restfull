@@ -32,7 +32,7 @@ export class UsuarioController {
 
   @Get()
   async listUsuarios() {
-    return await this.usuarioService.listaUsuarios();
+    return await this.usuarioService.listUsuarios();
   }
 
   @Put('/:id')

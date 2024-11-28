@@ -23,18 +23,23 @@ export class UsuarioService {
     return this.usuarioRepository.save(usuarioEntity);
   }
 
-  async listaUsuarios() {
+  async listUsuarios() {
     const usuariosSalvos = await this.usuarioRepository.find();
-
     const usuariosLista = usuariosSalvos.map(
       (usuario) => new ListaUsuarioDTO(usuario.id, usuario.nome),
     );
-
     return usuariosLista;
   }
 
-  async atualizaUsuario(id: string, usuario: AtualizaUsuarioDTO) {
-    await this.usuarioRepository.update(id, usuario);
+  async buscaPorEmail(email: string) {
+    const checkEmail = await this.usuarioRepository.findOne({
+      where: { email },
+    });
+    return checkEmail;
+  }
+
+  async atualizaUsuario(id: string, novosDados: AtualizaUsuarioDTO) {
+    await this.usuarioRepository.update(id, novosDados);
   }
 
   async deletaUsuario(id: string) {

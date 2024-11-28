@@ -34,7 +34,7 @@ export class ProdutoController {
 
   @Get()
   async listaTodos() {
-    return this.produtoService.listaProdutos();
+    return this.produtoService.listProdutos();
   }
 
   @Put('/:id')

@@ -1,13 +1,13 @@
-import { UsuarioEntity } from '../usuario/usuario.entity';
-import { PedidoEntity } from './pedido.entity';
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { StatusPedido } from './enum/statuspedido.enum';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
+import { AtualizaPedidoDto } from './dto/AtualizaPedido.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PedidoEntity } from './pedido.entity';
+import { In, Repository } from 'typeorm';
+import { UsuarioEntity } from '../usuario/usuario.entity';
+import { StatusPedido } from './enum/statuspedido.enum';
 import { ItemPedidoEntity } from './itempedido.entity';
 import { ProdutoEntity } from '../produto/produto.entity';
-import { AtualizaPedidoDto } from './dto/AtualizaPedido.dto';
 
 @Injectable()
 export class PedidoService {
@@ -20,8 +20,17 @@ export class PedidoService {
     private readonly produtoRepository: Repository<ProdutoEntity>,
   ) {}
 
+  private async buscaUsuario(id: string) {
+    const usuario = await this.usuarioRepository.findOneBy({ id: id });
+
+    if (usuario === null)
+      throw new NotFoundException('O usuário não foi encontrado');
+
+    return usuario;
+  }
+
   async cadastraPedido(usuarioId: string, dadosDoPedido: CriaPedidoDTO) {
-    const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
+    const usuario = await this.buscaUsuario(usuarioId);
     const produtosIds = dadosDoPedido.itensPedido.map(
       (itemPedido) => itemPedido.produtoId,
     );
@@ -29,15 +38,20 @@ export class PedidoService {
     const produtosRelacionados = await this.produtoRepository.findBy({
       id: In(produtosIds),
     });
-    const pedido = new PedidoEntity();
-
-    pedido.status = StatusPedido.EM_PROCESSAMENTO;
-    pedido.usuario = usuario;
+    const pedidoEntity = new PedidoEntity();
+    pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO;
+    pedidoEntity.usuario = usuario;
 
     const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
       const produtoRelacionado = produtosRelacionados.find(
-        (p) => p.id === itemPedido.produtoId,
+        (produto) => produto.id === itemPedido.produtoId,
       );
+
+      if (produtoRelacionado === undefined)
+        throw new NotFoundException(
+          `O produto com id ${itemPedido.produtoId} não foi encontrado`,
+        );
+
       const itemPedidoEntity = new ItemPedidoEntity();
       itemPedidoEntity.produto = produtoRelacionado;
       itemPedidoEntity.precoVenda = produtoRelacionado.valor;
@@ -50,15 +64,16 @@ export class PedidoService {
       return total + item.precoVenda * item.quantidade;
     }, 0);
 
-    pedido.itensPedido = itensPedidoEntidades;
-    pedido.valorTotal = valorTotal;
+    pedidoEntity.itensPedido = itensPedidoEntidades;
 
-    const pedidoCriado = await this.pedidoRepository.save(pedido);
+    pedidoEntity.valorTotal = valorTotal;
+
+    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
     return pedidoCriado;
   }
 
   async obtemPedidosDeUsuario(usuarioId: string) {
-    return await this.pedidoRepository.find({
+    return this.pedidoRepository.find({
       where: {
         usuario: { id: usuarioId },
       },
@@ -70,6 +85,9 @@ export class PedidoService {
 
   async atualizaPedido(id: string, dto: AtualizaPedidoDto) {
     const pedido = await this.pedidoRepository.findOneBy({ id });
+
+    if (pedido === null)
+      throw new NotFoundException('O pedido não foi encontrado');
 
     Object.assign(pedido, dto);
 

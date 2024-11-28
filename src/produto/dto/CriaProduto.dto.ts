@@ -25,10 +25,11 @@ export class CaracteristicaProdutoDTO {
 
   produto: ProdutoEntity;
 }
+
 export class ImagemProdutoDTO {
   id: string;
 
-  @IsUrl(undefined, { message: 'URL para imagem inválida' })
+  @IsUrl({ message: 'URL para imagem inválida' })
   url: string;
 
   @IsString()
@@ -60,7 +61,7 @@ export class CriaProdutoDTO {
 
   @ValidateNested()
   @IsArray()
-  @ArrayMinSize(3)
+  @ArrayMinSize(1)
   @Type(() => CaracteristicaProdutoDTO)
   caracteristicas: CaracteristicaProdutoDTO[];
 
