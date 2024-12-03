@@ -8,6 +8,7 @@ import { PedidoModule } from './modulos/pedido/pedido.module';
 import { APP_FILTER } from '@nestjs/core';
 import { FiltroDeExecaoGlobal } from './recursos/filtros/filtro-de-execao-global';
 import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -21,7 +22,16 @@ import { CacheModule } from '@nestjs/cache-manager';
       inject: [PostgresConfigService],
     }),
     PedidoModule,
-    CacheModule.register({ isGlobal: true, ttl: 10000 }), //Time to live (ttl) -> Tempo que cache sera guardado em memoria.
+    //Time to live (ttl) -> Tempo que cache sera guardado em memoria.
+    CacheModule.registerAsync({
+      useFactory: async () => ({
+        store: await redisStore({
+          ttl: 10 * 1000,
+          socket: { host: '127.0.0.1', port: 6379 }, // Foi necessario deixar claro a conexão pois, não estava conectando localmente.
+        }),
+      }),
+      isGlobal: true,
+    }),
   ],
   providers: [
     {

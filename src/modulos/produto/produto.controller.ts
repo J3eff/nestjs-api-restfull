@@ -36,12 +36,11 @@ export class ProdutoController {
   @Get('/:id')
   @UseInterceptors(CacheInterceptor) //Ele consegue executar código tanto antes do controlador, quanto depois.
   async listaUm(@Param('id') id: string) {
-    const produtoSalvo = await this.produtoService.listaUmProduto(id);
-
-    return produtoSalvo;
+    return await this.produtoService.listaUmProduto(id);
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor) //Ele consegue executar código tanto antes do controlador, quanto depois.
   async listaTodos() {
     return this.produtoService.listProdutos();
   }
