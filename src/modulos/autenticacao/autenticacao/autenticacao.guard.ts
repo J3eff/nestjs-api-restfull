@@ -5,14 +5,32 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { UsuarioPayload } from '../autenticacao.service';
+import { JwtService } from '@nestjs/jwt';
+
+export interface RequisicaoComUsuario extends Request {
+  usuario: UsuarioPayload;
+}
 
 @Injectable()
 export class AutenticacaoGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const requisicao = context.switchToHttp().getRequest();
+    const requisicao = context
+      .switchToHttp()
+      .getRequest<RequisicaoComUsuario>();
     const token = this.extrairTokenDoCabecalho(requisicao);
 
     if (!token) throw new UnauthorizedException('Erro de autenticação');
+
+    try {
+      const payload: UsuarioPayload = await this.jwtService.verifyAsync(token);
+      requisicao.usuario = payload;
+    } catch (error) {
+      console.error(error);
+      throw new UnauthorizedException('JWT inválido');
+    }
 
     return true;
   }
