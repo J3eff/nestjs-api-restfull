@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AtualizaProdutoDTO } from './dto/atualizaProduto.dto';
@@ -15,7 +16,9 @@ import { ProdutoService } from './produto.service';
 import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ProdutoEntity } from './produto.entity';
+import { AutenticacaoGuard } from '../autenticacao/autenticacao/autenticacao.guard';
 
+@UseGuards(AutenticacaoGuard)
 @Controller('produtos')
 export class ProdutoController {
   constructor(
