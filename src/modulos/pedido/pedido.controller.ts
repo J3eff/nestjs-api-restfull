@@ -6,16 +6,19 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PedidoService } from './pedido.service';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { AtualizaPedidoDto } from './dto/AtualizaPedido.dto';
+import { AutenticacaoGuard } from '../autenticacao/autenticacao/autenticacao.guard';
 
 @Controller('pedidos')
 export class PedidoController {
   constructor(private readonly pedidoService: PedidoService) {}
 
   @Post()
+  @UseGuards(AutenticacaoGuard)
   async criaPedido(
     @Query('usuarioId') usuarioId: string,
     @Body() dadosDoPedido: CriaPedidoDTO,
@@ -24,7 +27,10 @@ export class PedidoController {
       usuarioId,
       dadosDoPedido,
     );
-    return pedidoCriado;
+    return {
+      mensagem: 'Pedido feito com sucesso',
+      pedido: pedidoCriado,
+    };
   }
 
   @Get()
