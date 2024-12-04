@@ -15,7 +15,7 @@ import { AtualizaUsuarioDTO } from './dto/AtualizaUsuario.dto';
 import { UsuarioService } from './usuario.service';
 import { HashearSenhaPipe } from '../../recursos/pipes/hashear-senha.pipe';
 import { AutenticacaoGuard } from '../autenticacao/autenticacao/autenticacao.guard';
-@UseGuards(AutenticacaoGuard)
+
 @Controller('/usuarios')
 export class UsuarioController {
   constructor(
@@ -39,11 +39,13 @@ export class UsuarioController {
     };
   }
 
+  @UseGuards(AutenticacaoGuard)
   @Get()
   async listUsuarios() {
     return await this.usuarioService.listUsuarios();
   }
 
+  @UseGuards(AutenticacaoGuard)
   @Put('/:id')
   async atualizaUsuario(
     @Param('id') id: string,
@@ -60,6 +62,7 @@ export class UsuarioController {
     };
   }
 
+  @UseGuards(AutenticacaoGuard)
   @Delete('/:id')
   async removeUsuario(@Param('id') id: string) {
     const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
