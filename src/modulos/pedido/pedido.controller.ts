@@ -48,9 +48,15 @@ export class PedidoController {
 
   @Patch(':id')
   atualizaPedido(
+    @Req() req: RequisicaoComUsuario,
     @Param('id') pedidoId: string,
     @Body() dadosDeAtualizacao: AtualizaPedidoDto,
   ) {
-    return this.pedidoService.atualizaPedido(pedidoId, dadosDeAtualizacao);
+    const usuarioId = req.usuario.sub;
+    return this.pedidoService.atualizaPedido(
+      pedidoId,
+      dadosDeAtualizacao,
+      usuarioId,
+    );
   }
 }
