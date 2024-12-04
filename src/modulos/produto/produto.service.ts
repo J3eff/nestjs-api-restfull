@@ -41,7 +41,7 @@ export class ProdutoService {
   }
 
   async listaUmProduto(id: string) {
-    const entityName = await this.produtoRepository.find({
+    const entityName = await this.produtoRepository.findOne({
       where: { id },
       relations: {
         imagens: true,
